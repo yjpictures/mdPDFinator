@@ -7,10 +7,11 @@ jobs:
 
   build-binaries:
 
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
 
@@ -27,6 +28,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry==${{ vars.POETRY_VERSION }}
 
+      - name: Install Pango Linux
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt install weasyprint
+
+      - name: Install Pango macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: sudo brew install weasyprint
+
       - name: Install depencencies
         run: poetry install --with prod
       
@@ -38,3 +47,4 @@ jobs:
         with:
           name: binary-${{ runner.os }}
           path: dist/mdPDFinator*
+          
