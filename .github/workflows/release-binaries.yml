@@ -29,12 +29,12 @@ jobs:
 
       - name: Install depencencies
         run: poetry install --with prod
-
-      - name: List files before pyinstaller
-        run: find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       
       - name: Create pyinstaller package
         run: poetry run pyinstaller --onefile mdPDFinator.py
 
-      - name: List files after pyinstaller
-        run: find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
+      - name: Upload the binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: binary-${{ runner.os }}
+          path: dist/mdPDFinator*
