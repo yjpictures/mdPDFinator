@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Pango macOS
         if: ${{ runner.os == 'macOS' }}
-        run: sudo brew install weasyprint
+        run: brew install weasyprint
 
       - name: Install depencencies
         run: poetry install --with prod
@@ -47,4 +47,3 @@ jobs:
         with:
           name: binary-${{ runner.os }}
           path: dist/mdPDFinator*
-          
