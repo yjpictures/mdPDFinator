@@ -1,13 +1,22 @@
 [tool.poetry]
 name = "mdPDFinator"
-version = "0.1.0"
+version = "1.0.0"
 description = "This converts markdown to pdf"
 authors = ["Yash Jain <hello@yashj.ca>"]
 license = "GPL-3.0 license"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.13"
+fire = "^0.5.0"
+markdown2 = "^2.4.10"
+weasyprint = "^60.1"
+
+[tool.poetry.group.prod]
+optional = true
+
+[tool.poetry.group.prod.dependencies]
+pyinstaller = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core"]
