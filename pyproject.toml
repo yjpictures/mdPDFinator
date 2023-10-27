@@ -6,7 +6,7 @@ authors = ["Yash Jain <hello@yashj.ca>"]
 license = "GPL-3.0 license"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.10,<3.13"
 fire = "^0.5.0"
 markdown2 = "^2.4.10"
 weasyprint = "^60.1"

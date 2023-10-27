@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -28,14 +28,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry==${{ vars.POETRY_VERSION }}
 
-      - name: Install Pango Linux
-        if: ${{ runner.os == 'Linux' }}
-        run: sudo apt install weasyprint
-
-      - name: Install Pango macOS
-        if: ${{ runner.os == 'macOS' }}
-        run: brew install weasyprint
-
       - name: Install depencencies
         run: poetry install --with prod
       
@@ -45,5 +37,5 @@ jobs:
       - name: Upload the binary
         uses: actions/upload-artifact@v3
         with:
-          name: binary-${{ runner.os }}
+          name: executable-${{ runner.os }}
           path: dist/mdPDFinator*
