@@ -5,9 +5,12 @@ on:
 
 jobs:
 
-  linux:
+  build-binaries:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
 
