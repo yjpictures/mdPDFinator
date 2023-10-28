@@ -75,11 +75,10 @@ jobs:
 
       - name: Test it out
         run: |
-          ls
           ./mdPDFinator sample.md
 
       - name: Upload the converted PDF file
         uses: actions/upload-artifact@v3
         with:
           name: test-output-${{ runner.os }}
-          path: dist/output.pdf
+          path: output.pdf
