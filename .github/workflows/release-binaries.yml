@@ -10,7 +10,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macos-11, windows-2019]
-
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -34,14 +33,38 @@ jobs:
       - name: Create pyinstaller package
         run: poetry run pyinstaller --onefile mdPDFinator.py
 
-      - name: Test it out
-        run: |
-          cd dist
-          ./mdPDFinator ../.github/README.md
-          ls -a
-
       - name: Upload the binary
         uses: actions/upload-artifact@v3
         with:
           name: executable-${{ runner.os }}
           path: dist/mdPDFinator*
+    
+  test-binaries:
+
+    needs: build-binaries
+    
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-11, windows-2019]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Install weasyprint (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt install weasyprint
+
+      - name: Install weasyprint (macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install weasyprint
+
+      - name: Test it out
+        run: |
+          cd dist
+          ./mdPDFinator ../.github/README.md
+
+      - name: Upload the converted PDF file
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output-${{ runner.os }}
+          path: dist/output.pdf
