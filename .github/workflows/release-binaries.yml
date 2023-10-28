@@ -34,6 +34,12 @@ jobs:
       - name: Create pyinstaller package
         run: poetry run pyinstaller --onefile mdPDFinator.py
 
+      - name: Test it out
+        run: |
+          cd dist
+          ./mdPDFinator ../.github/README.md
+          ls -a
+
       - name: Upload the binary
         uses: actions/upload-artifact@v3
         with:
