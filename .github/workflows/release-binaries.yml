@@ -8,6 +8,7 @@ jobs:
   build-binaries:
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-11, windows-2019]
     runs-on: ${{ matrix.os }}
@@ -44,8 +45,9 @@ jobs:
     needs: build-binaries
     
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-11]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -55,8 +57,9 @@ jobs:
         with:
           name: executable-${{ runner.os }}
 
-      - name: List contents
-        run: ls
+      - name: Download sample markdown
+        run: |
+          curl ${{ vars.SAMPLE_MARKDOWN_URL }} -o sample.md
 
       - name: Install weasyprint (Linux)
         if: ${{ runner.os == 'Linux' }}
@@ -72,7 +75,8 @@ jobs:
 
       - name: Test it out
         run: |
-          ./mdPDFinator ../.github/README.md
+          ls
+          ./mdPDFinator sample.md
 
       - name: Upload the converted PDF file
         uses: actions/upload-artifact@v3
