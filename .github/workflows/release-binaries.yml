@@ -91,6 +91,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [Linux, macOS, Windows]
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     steps:
