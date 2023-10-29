@@ -43,7 +43,6 @@ jobs:
   test-binaries:
 
     needs: build-binaries
-    
     strategy:
       fail-fast: false
       matrix:
@@ -82,3 +81,43 @@ jobs:
         with:
           name: test-output-${{ runner.os }}
           path: output.pdf
+
+  release-binaries:
+
+    needs:
+      - build-binaries
+      - test-binaries
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [Linux, macOS, Windows]
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download the binary
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-${{ runner.os }}
+
+      - name: Pre-Release the version
+        if: github.ref != 'refs/heads/stable'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: v${{ vars.VersionNumber }}
+          title: Beta v${{ vars.VersionNumber }}
+          prerelease: true
+          files: |
+            mdPDFinator*
+      
+      - name: Release the version
+        if: github.ref == 'refs/heads/stable'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: v${{ vars.VersionNumber }}
+          title: Stable v${{ vars.VersionNumber }}
+          prerelease: false
+          files: |
+            mdPDFinator*
