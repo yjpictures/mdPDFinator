@@ -118,7 +118,7 @@ jobs:
         run: mv mdPDFinator.exe mdPDFinator-Windows.exe
 
       - name: Pre-Release the version
-        if: github.ref != 'refs/heads/stable'
+        if: github.ref == 'refs/heads/beta'
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
