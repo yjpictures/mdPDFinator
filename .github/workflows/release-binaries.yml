@@ -1,0 +1,140 @@
+name: Release Binaries
+
+on:
+  push
+
+jobs:
+
+  build-binaries:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macos-11, windows-2019]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Python ${{ vars.PYTHON_VERSION }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ vars.PYTHON_VERSION }}
+      
+      - name: Setup Poetry ${{ vars.POETRY_VERSION }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry==${{ vars.POETRY_VERSION }}
+
+      - name: Install depencencies
+        run: poetry install --with prod
+      
+      - name: Create pyinstaller package
+        run: poetry run pyinstaller --onefile mdPDFinator.py
+
+      - name: Upload the binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: executable-${{ runner.os }}
+          path: dist/mdPDFinator*
+    
+  test-binaries:
+
+    needs: build-binaries
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Download the binary
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-${{ runner.os }}
+
+      - name: Download sample markdown
+        run: |
+          curl ${{ vars.SAMPLE_MARKDOWN_URL }} -o sample.md
+
+      - name: Install weasyprint (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          chmod 775 mdPDFinator
+          sudo apt install weasyprint
+
+      - name: Install weasyprint (macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          chmod 775 mdPDFinator
+          brew install weasyprint
+
+      - name: Test it out
+        run: |
+          ./mdPDFinator sample.md
+
+      - name: Upload the converted PDF file
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output-${{ runner.os }}
+          path: output.pdf
+
+  release-binaries:
+
+    needs:
+      - build-binaries
+      - test-binaries
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download the binary (Linux)
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-Linux
+
+      - name: Rename execuatable (Linux)
+        run: mv mdPDFinator mdPDFinator-Linux
+
+      - name: Download the binary (macOS)
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-macOS
+
+      - name: Rename execuatable (macOS)
+        run: mv mdPDFinator mdPDFinator-macOS
+
+      - name: Download the binary (Windows)
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-Windows
+
+      - name: Rename execuatable (Windows)
+        run: mv mdPDFinator.exe mdPDFinator-Windows.exe
+
+      - name: Pre-Release the version
+        if: github.ref == 'refs/heads/beta'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: v${{ vars.VersionNumber }}
+          title: Beta v${{ vars.VersionNumber }}
+          prerelease: true
+          files: |
+            mdPDFinator*
+      
+      - name: Release the version
+        if: github.ref == 'refs/heads/stable'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: v${{ vars.VersionNumber }}
+          title: Stable v${{ vars.VersionNumber }}
+          prerelease: false
+          files: |
+            mdPDFinator*
