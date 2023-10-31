@@ -108,7 +108,9 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
         with:
-          sparse-checkout: docker
+          sparse-checkout: |
+            docker
+            .github
 
       - name: Download the binary (Linux)
         uses: actions/download-artifact@v3
