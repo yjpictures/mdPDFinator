@@ -96,7 +96,7 @@ jobs:
     name: Release docker image
     needs:
       - test-binaries
-    if: ${{ (github.ref == format('refs/heads/{0}', 'stable'))}}
+    if: startsWith(github.event.ref, 'refs/tags/v')
     permissions:
       contents: read
       packages: write
@@ -147,8 +147,8 @@ jobs:
             ghcr.io/${{ github.repository }}
             ${{ github.repository }}
           tags: |
-            type=raw,value=${{ vars.VERSIONNUMBER }}
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'stable') }}
+            type=semver,pattern=v{{version}}
+            type=raw,value=latest
       
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -175,7 +175,7 @@ jobs:
     name: Release all the binaries
     needs:
       - test-binaries
-    if: ${{ (github.ref == format('refs/heads/{0}', 'stable'))}}
+    if: startsWith(github.event.ref, 'refs/tags/v')
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -206,24 +206,10 @@ jobs:
       - name: Rename execuatable (Windows)
         run: mv mdPDFinator.exe mdPDFinator-Windows.exe
 
-      - name: Pre-Release the version
-        if: github.ref == 'refs/heads/beta'
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Upload the executables to the release
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: v${{ vars.VersionNumber }}
-          title: Beta v${{ vars.VersionNumber }}
-          prerelease: true
-          files: |
-            mdPDFinator*
-      
-      - name: Release the version
-        if: github.ref == 'refs/heads/stable'
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: v${{ vars.VersionNumber }}
-          title: Stable v${{ vars.VersionNumber }}
-          prerelease: false
-          files: |
-            mdPDFinator*
+          file: mdPDFinator*
+          tag: ${{ github.ref }}
+          overwrite: true

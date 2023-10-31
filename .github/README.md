@@ -1,8 +1,11 @@
 # Markdown to PDF Converter CLI
 
-[![GitHub Actions Status](https://github.com/yjpictures/mdPDFinator/actions/workflows/release-binaries.yml/badge.svg?branch=stable)](https://github.com/yjpictures/mdPDFinator)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/yjpictures/mdPDFinator/release-binaries.yml?logo=github)
+](https://github.com/yjpictures/mdPDFinator)
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/yjpictures/mdpdfinator)](https://github.com/yjpictures/mdPDFinator/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/yjpictures/mdpdfinator?logo=docker)](https://hub.docker.com/r/yjpictures/mdpdfinator)
+[![GitHub License](https://img.shields.io/github/license/yjpictures/mdPDFinator)
+](https://github.com/yjpictures/mdPDFinator/blob/master/LICENSE)
 
 Convert your Markdown files to PDF from the command line with ease. This cross-platform command-line tool supports Linux, macOS, and Windows.
 
@@ -19,7 +22,6 @@ Convert your Markdown files to PDF from the command line with ease. This cross-p
 - [Troubleshooting](#troubleshooting)
 - [Limitations](#limitations)
 - [Developing](#developing)
-- [License](#license)
 
 
 
@@ -83,9 +85,9 @@ Replace input.md with the path to your Markdown file. You can customize the outp
 
 ## Options
 
-`-o`, `--output_file_path <file>`: Default: 'output.pdf'. Path to the output PDF file (it will not create a folder for you, make sure directory already exists).
+`-o`, `--output_file_path <file>`: Default: `output.pdf`. Path to the output PDF file (it will not create a folder for you, make sure directory already exists).
 
-`-n`, `--new_page_char <char>`: Default: '---'. Character for new page break.
+`-n`, `--new_page_char <char>`: Default: `---`. Character for new page break.
 
 `-s`, `--style_file_path <style>`: Path to the CSS file.
 
@@ -173,7 +175,7 @@ Please be aware of these limitations and compatibility considerations when using
 
 ## Developing
 
-This python project has been setup poetry.
+This python project has been setup with poetry.
 
 ### First time dev setup
 
@@ -208,9 +210,3 @@ poetry add <package> --group prod
 ```bash
 poetry remove <package>
 ```
-
-
-
-## License
-
-This project is licensed under the GPL-3.0 License - see the [LICENSE](https://github.com/yjpictures/mdPDFinator/blob/beta/LICENSE) file for details.
