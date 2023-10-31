@@ -1,8 +1,25 @@
 # Markdown to PDF Converter CLI
 
-![GitHub Actions Badge](https://github.com/yjpictures/mdPDFinator/actions/workflows/release-binaries.yml/badge.svg?branch=stable)
+[![GitHub Actions Status](https://github.com/yjpictures/mdPDFinator/actions/workflows/release-binaries.yml/badge.svg?branch=stable)](https://github.com/yjpictures/mdPDFinator)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/yjpictures/mdpdfinator)](https://github.com/yjpictures/mdPDFinator/releases/latest)
+[![Docker Pulls](https://img.shields.io/docker/pulls/yjpictures/mdpdfinator?logo=docker)](https://hub.docker.com/r/yjpictures/mdpdfinator)
 
 Convert your Markdown files to PDF from the command line with ease. This cross-platform command-line tool supports Linux, macOS, and Windows.
+
+
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Docker Usage](#docker-usage)
+- [Options](#options)
+- [Examples](#examples)
+- [Troubleshooting](#troubleshooting)
+- [Limitations](#limitations)
+- [Developing](#developing)
+- [License](#license)
 
 
 
@@ -40,6 +57,24 @@ To convert a Markdown file to PDF, use the following command:
 
 ```bash
 ./mdPDFinator input.md
+```
+
+Replace input.md with the path to your Markdown file. You can customize the output style and format using various options (see [Options](#options)).
+
+
+
+## Docker Usage
+
+1. Install [Docker](https://www.docker.com/)
+
+2. Pull the mdPDFinator image from docker.
+```bash
+docker pull yjpictures/mdpdfinator
+```
+
+3. To convert a Markdown file to PDF, use the following command:
+```bash
+docker run --rm -v ${PWD}:/app yjpictures/mdpdfinator input.md
 ```
 
 Replace input.md with the path to your Markdown file. You can customize the output style and format using various options (see [Options](#options)).
