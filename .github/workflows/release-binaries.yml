@@ -96,6 +96,7 @@ jobs:
     name: Release docker image
     needs:
       - test-binaries
+    # if: ${{ (github.ref == format('refs/heads/{0}', 'stable')) || (github.ref == format('refs/heads/{0}', 'beta')) }}
     permissions:
       contents: read
       packages: write
@@ -104,10 +105,20 @@ jobs:
 
     steps:
 
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: docker
+
       - name: Download the binary (Linux)
         uses: actions/download-artifact@v3
         with:
           name: executable-Linux
+
+      - name: Move the executable to dist/ folder
+        run: |
+          mkdir dist
+          mv mdPDFinator dist/mdPDFinator
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -163,6 +174,7 @@ jobs:
     name: Release all the binaries
     needs:
       - test-binaries
+    if: ${{ (github.ref == format('refs/heads/{0}', 'stable')) || (github.ref == format('refs/heads/{0}', 'beta')) }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
