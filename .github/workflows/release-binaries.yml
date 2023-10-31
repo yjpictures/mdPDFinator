@@ -96,7 +96,7 @@ jobs:
     name: Release docker image
     needs:
       - test-binaries
-    # if: ${{ (github.ref == format('refs/heads/{0}', 'stable')) || (github.ref == format('refs/heads/{0}', 'beta')) }}
+    if: ${{ (github.ref == format('refs/heads/{0}', 'stable'))}}
     permissions:
       contents: read
       packages: write
@@ -149,8 +149,6 @@ jobs:
           tags: |
             type=raw,value=${{ vars.VERSIONNUMBER }}
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'stable') }}
-            type=raw,value=beta,enable=${{ github.ref == format('refs/heads/{0}', 'beta') }}
-            type=raw,value=alpha,enable=${{ (github.ref != format('refs/heads/{0}', 'stable')) && (github.ref != format('refs/heads/{0}', 'beta')) }}
       
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -177,7 +175,7 @@ jobs:
     name: Release all the binaries
     needs:
       - test-binaries
-    if: ${{ (github.ref == format('refs/heads/{0}', 'stable')) || (github.ref == format('refs/heads/{0}', 'beta')) }}
+    if: ${{ (github.ref == format('refs/heads/{0}', 'stable'))}}
     permissions:
       contents: write
     runs-on: ubuntu-latest
