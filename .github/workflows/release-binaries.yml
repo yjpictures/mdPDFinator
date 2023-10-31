@@ -7,6 +7,7 @@ jobs:
 
   build-binaries:
 
+    name: Build all the binaries
     strategy:
       fail-fast: false
       matrix:
@@ -42,6 +43,7 @@ jobs:
     
   test-binaries:
 
+    name: Test all the binaries
     needs: build-binaries
     strategy:
       fail-fast: false
@@ -89,10 +91,77 @@ jobs:
           name: test-output-${{ runner.os }}
           path: output.pdf
 
+  release-docker-image:
+    
+    name: Release docker image
+    needs:
+      - test-binaries
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download the binary (Linux)
+        uses: actions/download-artifact@v3
+        with:
+          name: executable-Linux
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log into registry GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Docker Metadata Capture
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          context: git
+          images: |
+            ghcr.io/${{ github.repository }}
+            ${{ github.repository }}
+          tags: |
+            type=raw,value=${{ vars.VERSIONNUMBER }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'stable') }}
+            type=raw,value=beta,enable=${{ github.ref == format('refs/heads/{0}', 'beta') }}
+            type=raw,value=alpha,enable=${{ (github.ref != format('refs/heads/{0}', 'stable')) && (github.ref != format('refs/heads/{0}', 'beta')) }}
+      
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ vars.DOCKERFILE_PROD }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: |
+            "org.opencontainers.image.description=${{ vars.GHCR_DESCRIPTION }}"
+          provenance: false
+      
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          short-description: ${{ vars.DOCKER_HUB_DESCRIPTION }}
+
   release-binaries:
 
+    name: Release all the binaries
     needs:
-      - build-binaries
       - test-binaries
     permissions:
       contents: write
