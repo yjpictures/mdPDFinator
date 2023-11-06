@@ -1,9 +1,11 @@
 # Markdown to PDF Converter CLI
 
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/yjpictures/mdPDFinator/release-binaries.yml?logo=github)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/yjpictures/mdPDFinator/release-binaries.yml?logo=github&label=build%20and%20test)
 ](https://github.com/yjpictures/mdPDFinator)
-[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/yjpictures/mdpdfinator)](https://github.com/yjpictures/mdPDFinator/releases/latest)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/yjpictures/mdPDFinator)
+](https://github.com/yjpictures/mdPDFinator/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/yjpictures/mdpdfinator?logo=docker)](https://hub.docker.com/r/yjpictures/mdpdfinator)
+[![GitHub all releases](https://img.shields.io/github/downloads/yjpictures/mdPDFinator/total?logo=github)](https://github.com/yjpictures/mdPDFinator/releases)
 [![GitHub License](https://img.shields.io/github/license/yjpictures/mdPDFinator)
 ](https://github.com/yjpictures/mdPDFinator/blob/master/LICENSE)
 
