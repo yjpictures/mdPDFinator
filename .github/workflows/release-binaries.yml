@@ -76,7 +76,7 @@ jobs:
 
       - name: Install weasyprint (Windows)
         if: ${{ runner.os == 'Windows' }}
-        uses: yjpictures/GTK-Windows@v1.0.0
+        uses: yjpictures/GTK-Windows@v1
 
       - name: Test it out
         run: |
