@@ -54,7 +54,7 @@ jobs:
     steps:
 
       - name: Download the binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: executable-${{ runner.os }}
 
@@ -110,7 +110,7 @@ jobs:
             .github
 
       - name: Download the binary (Linux)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: executable-Linux
 
@@ -180,7 +180,7 @@ jobs:
     steps:
 
       - name: Download the binary (Linux)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: executable-Linux
 
@@ -188,7 +188,7 @@ jobs:
         run: mv mdPDFinator mdPDFinator-Linux
 
       - name: Download the binary (macOS)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: executable-macOS
 
@@ -196,7 +196,7 @@ jobs:
         run: mv mdPDFinator mdPDFinator-macOS
 
       - name: Download the binary (Windows)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: executable-Windows
 
